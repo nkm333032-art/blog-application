@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogApp - Register</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">BlogApp</div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+</header>
+
+<div class="form-container">
+
+    <form id="registerForm" class="form-box">
+
+        <h2>Create Account</h2>
+        <p>Register to start blogging</p>
+
+        <label>Full Name</label>
+        <input
+            type="text"
+            id="registerName"
+            placeholder="Enter your name"
+            required
+        >
+
+        <label>Email</label>
+        <input
+            type="email"
+            id="registerEmail"
+            placeholder="Enter your email"
+            required
+        >
+
+        <label>Password</label>
+        <input
+            type="password"
+            id="registerPassword"
+            placeholder="Create a password"
+            required
+        >
+
+        <label>Confirm Password</label>
+        <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            required
+        >
+
+        <button type="submit" class="btn full-btn">
+            Register
+        </button>
+
+        <p id="registerMessage" class="message"></p>
+
+        <p>
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+
+    </form>
+
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

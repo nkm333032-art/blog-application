@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogApp - Create Blog</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <div class="logo">BlogApp</div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="create-blog.html">Create Blog</a>
+            <button onclick="logout()" class="logout-btn">
+                Logout
+            </button>
+        </div>
+
+    </nav>
+</header>
+
+<div class="form-container">
+
+    <form id="blogForm" class="form-box blog-form">
+
+        <h2>Create New Blog</h2>
+        <p>Share your thoughts with the world.</p>
+
+        <label>Blog Title</label>
+
+        <input
+            type="text"
+            id="blogTitle"
+            placeholder="Enter blog title"
+            required
+        >
+
+        <label>Category</label>
+
+        <select id="blogCategory" required>
+            <option value="">Select Category</option>
+            <option value="Technology">Technology</option>
+            <option value="Education">Education</option>
+            <option value="Travel">Travel</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Programming">Programming</option>
+        </select>
+
+        <label>Blog Content</label>
+
+        <textarea
+            id="blogContent"
+            rows="10"
+            placeholder="Write your blog here..."
+            required
+        ></textarea>
+
+        <button type="submit" class="btn full-btn">
+            Publish Blog
+        </button>
+
+        <p id="blogMessage" class="message"></p>
+
+    </form>
+
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

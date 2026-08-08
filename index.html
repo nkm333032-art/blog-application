@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogApp - Home</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">BlogApp</div>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="create-blog.html">Create Blog</a>
+            <a href="login.html" id="loginLink">Login</a>
+            <a href="register.html" id="registerLink">Register</a>
+            <button onclick="logout()" id="logoutBtn" class="logout-btn">
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+
+<section class="hero">
+    <div>
+        <h1>Share Your Ideas With The World</h1>
+        <p>
+            Create, discover and share amazing blog posts.
+        </p>
+
+        <a href="create-blog.html" class="btn">
+            Create a Blog
+        </a>
+    </div>
+</section>
+
+<section class="container">
+    <h2>Latest Blogs</h2>
+
+    <div id="blogList" class="blog-grid">
+        <!-- Blogs will appear here -->
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 BlogApp. All Rights Reserved.</p>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
