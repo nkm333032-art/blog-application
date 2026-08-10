@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1786261584865,
+    "title": "My Blog",
+    "category": "Technology",
+    "content": "in this I learnt that how to connect frontend and backend",
+    "author": "Rahul",
+    "email": "rahul@gmail.com",
+    "date": "9/8/2026"
+  },
+  {
+    "id": 1786280580665,
+    "title": "My First Blog",
+    "category": "Technology",
+    "content": "This is my first blog using Node.js and Express.",
+    "author": "Rahul",
+    "email": "rahul@gmail.com",
+    "date": "9/8/2026"
+  }
+]

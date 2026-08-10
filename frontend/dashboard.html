@@ -1,78 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogApp - Register</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Inkly</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
-        <div class="logo">BlogApp</div>
+<!-- ================= NAVBAR ================= -->
 
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-        </div>
-    </nav>
-</header>
+<header class="navbar">
 
-<div class="form-container">
+    <div class="nav-container">
 
-    <form id="registerForm" class="form-box">
+        <a href="index.html"
+           class="logo">
+            Ink<span>ly</span>
+        </a>
 
-        <h2>Create Account</h2>
-        <p>Register to start blogging</p>
-
-        <label>Full Name</label>
-        <input
-            type="text"
-            id="registerName"
-            placeholder="Enter your name"
-            required
-        >
-
-        <label>Email</label>
-        <input
-            type="email"
-            id="registerEmail"
-            placeholder="Enter your email"
-            required
-        >
-
-        <label>Password</label>
-        <input
-            type="password"
-            id="registerPassword"
-            placeholder="Create a password"
-            required
-        >
-
-        <label>Confirm Password</label>
-        <input
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm your password"
-            required
-        >
-
-        <button type="submit" class="btn full-btn">
-            Register
+        <button class="menu-toggle"
+                onclick="toggleMenu()">
+            ☰
         </button>
 
-        <p id="registerMessage" class="message"></p>
+        <nav class="nav-links"
+             id="navLinks">
 
-        <p>
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+            <a href="index.html">
+                Home
+            </a>
 
-    </form>
+            <a href="create-blog.html"
+               class="nav-btn">
+                + Write Story
+            </a>
 
-</div>
+            <a href="#"
+               onclick="logout(); return false;">
+                Logout
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<main class="dashboard">
+
+    <div class="container">
+
+
+        <!-- DASHBOARD HEADER -->
+
+        <div class="dashboard-header">
+
+            <div class="dashboard-welcome">
+
+                <span class="section-label">
+                    YOUR SPACE
+                </span>
+
+                <h1>
+                    Your Dashboard
+                </h1>
+
+                <p id="welcomeMessage">
+                    Welcome back, writer.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-actions">
+
+                <a
+                    href="create-blog.html"
+                    class="btn btn-primary">
+
+                    <span>
+                        +
+                    </span>
+
+                    New Story
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= STATS ================= -->
+
+        <div class="stats-grid">
+
+
+            <!-- STORIES -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <span>
+                            YOUR STORIES
+                        </span>
+
+                        <h2 id="blogCount">
+                            0
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        ✍️
+                    </div>
+
+                </div>
+
+                <p>
+                    Stories you've published
+                </p>
+
+            </div>
+
+
+            <!-- PLATFORM -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <span>
+                            PLATFORM
+                        </span>
+
+                        <h2>
+                            Inkly
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        ✨
+                    </div>
+
+                </div>
+
+                <p>
+                    Your creative space
+                </p>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <div>
+
+                        <span>
+                            ACCOUNT
+                        </span>
+
+                        <h2>
+                            Active
+                        </h2>
+
+                    </div>
+
+                    <div class="stat-icon">
+                        ✓
+                    </div>
+
+                </div>
+
+                <p>
+                    Your account is ready
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= STORIES HEADER ================= -->
+
+        <div class="stories-header">
+
+            <div>
+
+                <span class="section-label">
+                    YOUR CONTENT
+                </span>
+
+                <h2 class="section-title">
+                    Your Stories
+                </h2>
+
+                <p class="section-subtitle">
+                    Manage the stories you've shared
+                    with the Inkly community.
+                </p>
+
+            </div>
+
+
+            <a
+                href="create-blog.html"
+                class="btn btn-outline">
+
+                + Write Another
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= BLOGS ================= -->
+
+        <div
+            class="blog-grid"
+            id="userBlogs">
+
+            <div class="empty-state">
+
+                <div class="loading-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Loading your stories...
+                </h3>
+
+                <p>
+                    We're getting your stories ready.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CREATE CTA ================= -->
+
+        <div class="dashboard-cta">
+
+            <div class="dashboard-cta-icon">
+                ✍️
+            </div>
+
+            <div>
+
+                <span class="section-label">
+                    KEEP CREATING
+                </span>
+
+                <h2>
+                    Have another story to tell?
+                </h2>
+
+                <p>
+                    Your next great idea could be
+                    your best one yet.
+                </p>
+
+            </div>
+
+            <a
+                href="create-blog.html"
+                class="btn btn-primary">
+
+                Write a Story →
+
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <a href="index.html"
+               class="logo">
+                Ink<span>ly</span>
+            </a>
+
+            <p>
+                Your space to write, learn and share.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="create-blog.html">
+                Write
+            </a>
+
+            <a href="#"
+               onclick="logout(); return false;">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
 
 <script src="js/script.js"></script>
+
 </body>
+
 </html>

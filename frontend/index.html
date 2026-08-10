@@ -1,55 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogApp - Home</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Inkly - Modern Blog</title>
+
     <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
-        <div class="logo">BlogApp</div>
+<!-- ================= NAVBAR ================= -->
 
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="create-blog.html">Create Blog</a>
-            <a href="login.html" id="loginLink">Login</a>
-            <a href="register.html" id="registerLink">Register</a>
-            <button onclick="logout()" id="logoutBtn" class="logout-btn">
-                Logout
-            </button>
-        </div>
-    </nav>
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="index.html" class="logo">
+            Ink<span>ly</span>
+        </a>
+
+        <button class="menu-toggle"
+                onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <nav class="nav-links" id="navLinks">
+
+            <a href="index.html" class="active">
+                Home
+            </a>
+
+            <a href="#blogs">
+                Explore
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+            <a href="register.html"
+               class="nav-btn">
+                Get Started
+            </a>
+
+        </nav>
+
+    </div>
+
 </header>
 
+
+<!-- ================= HERO ================= -->
+
+<main>
+
 <section class="hero">
-    <div>
-        <h1>Share Your Ideas With The World</h1>
-        <p>
-            Create, discover and share amazing blog posts.
-        </p>
 
-        <a href="create-blog.html" class="btn">
-            Create a Blog
-        </a>
+    <div class="hero-container">
+
+        <!-- HERO TEXT -->
+
+        <div class="hero-content">
+
+            <span class="hero-badge">
+                ✦ A place for thoughtful stories
+            </span>
+
+            <h1>
+                Ideas worth
+                <span>sharing.</span>
+            </h1>
+
+            <p>
+                Discover meaningful stories, practical ideas,
+                technology insights, and perspectives from
+                writers around the world.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="register.html"
+                   class="btn btn-primary">
+                    Start Writing →
+                </a>
+
+                <a href="#blogs"
+                   class="btn btn-outline">
+                    Explore Stories
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- FEATURED STORY -->
+
+        <div class="hero-card">
+
+            <div class="hero-card-image">
+
+                <img
+                    src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=900&q=80"
+                    alt="Laptop and notebook on a desk">
+
+            </div>
+
+            <div class="hero-card-content">
+
+                <small>
+                    FEATURED STORY
+                </small>
+
+                <h3>
+                    The art of building things that matter
+                </h3>
+
+                <p>
+                    Thoughts on creativity, technology,
+                    and making meaningful work.
+                </p>
+
+                <div class="featured-author">
+
+                    <div class="author-avatar">
+                        I
+                    </div>
+
+                    <div>
+                        <strong>
+                            Inkly Community
+                        </strong>
+
+                        <span>
+                            Featured article
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </section>
 
-<section class="container">
-    <h2>Latest Blogs</h2>
 
-    <div id="blogList" class="blog-grid">
-        <!-- Blogs will appear here -->
+<!-- ================= CATEGORIES ================= -->
+
+<section class="categories">
+
+    <div class="container">
+
+        <div class="category-header">
+
+            <div>
+
+                <span class="section-label">
+                    EXPLORE
+                </span>
+
+                <h2>
+                    Find your interests
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="category-grid">
+
+            <a href="#blogs"
+               class="category-card">
+
+                <div class="category-icon">
+                    💻
+                </div>
+
+                <div>
+                    <h3>
+                        Technology
+                    </h3>
+
+                    <p>
+                        AI, coding & innovation
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a href="#blogs"
+               class="category-card">
+
+                <div class="category-icon">
+                    ✈️
+                </div>
+
+                <div>
+                    <h3>
+                        Travel
+                    </h3>
+
+                    <p>
+                        Places & experiences
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a href="#blogs"
+               class="category-card">
+
+                <div class="category-icon">
+                    🌱
+                </div>
+
+                <div>
+                    <h3>
+                        Lifestyle
+                    </h3>
+
+                    <p>
+                        Ideas for better living
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a href="#blogs"
+               class="category-card">
+
+                <div class="category-icon">
+                    💡
+                </div>
+
+                <div>
+                    <h3>
+                        Ideas
+                    </h3>
+
+                    <p>
+                        Creativity & inspiration
+                    </p>
+                </div>
+
+            </a>
+
+        </div>
+
     </div>
+
 </section>
 
-<footer>
-    <p>© 2026 BlogApp. All Rights Reserved.</p>
+
+<!-- ================= BLOG SECTION ================= -->
+
+<section class="section" id="blogs">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    FROM THE COMMUNITY
+                </span>
+
+                <h2 class="section-title">
+                    Latest stories
+                </h2>
+
+                <p class="section-subtitle">
+                    Explore ideas and experiences shared by
+                    our community of writers.
+                </p>
+
+            </div>
+
+            <a href="register.html"
+               class="view-all">
+                Become a writer →
+            </a>
+
+        </div>
+
+
+        <!-- IMPORTANT:
+             script.js loads blogs here -->
+
+        <div
+            class="blog-grid"
+            id="blogContainer"
+        >
+
+            <div class="empty-state">
+
+                <div class="loading-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Stories are loading...
+                </h3>
+
+                <p>
+                    Please wait while we fetch the latest blogs.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+
+<section class="cta-section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <div>
+
+                <span class="section-label">
+                    YOUR STORY MATTERS
+                </span>
+
+                <h2>
+                    Have something to say?
+                </h2>
+
+                <p>
+                    Share your ideas, experiences and
+                    knowledge with the Inkly community.
+                </p>
+
+            </div>
+
+            <a href="register.html"
+               class="btn btn-white">
+                Start Writing →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <a href="index.html"
+               class="logo">
+                Ink<span>ly</span>
+            </a>
+
+            <p>
+                A home for thoughtful stories.
+            </p>
+
+        </div>
+
+
+        <div class="footer-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="#blogs">
+                Explore
+            </a>
+
+            <a href="login.html">
+                Login
+            </a>
+
+            <a href="register.html">
+                Register
+            </a>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            © 2026 Inkly.
+            Built for writers and readers.
+
+        </div>
+
+    </div>
+
 </footer>
 
+
 <script src="js/script.js"></script>
+
 </body>
+
 </html>

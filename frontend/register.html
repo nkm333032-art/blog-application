@@ -1,78 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogApp - Register</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - Inkly</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
-        <div class="logo">BlogApp</div>
+<!-- ================= NAVBAR ================= -->
 
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="login.html">Login</a>
-        </div>
-    </nav>
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="index.html"
+           class="logo">
+            Ink<span>ly</span>
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="login.html">
+                Sign In
+            </a>
+
+        </nav>
+
+    </div>
+
 </header>
 
-<div class="form-container">
 
-    <form id="registerForm" class="form-box">
+<!-- ================= REGISTER PAGE ================= -->
 
-        <h2>Create Account</h2>
-        <p>Register to start blogging</p>
+<main class="auth-page">
 
-        <label>Full Name</label>
-        <input
-            type="text"
-            id="registerName"
-            placeholder="Enter your name"
-            required
-        >
+    <div class="auth-container">
 
-        <label>Email</label>
-        <input
-            type="email"
-            id="registerEmail"
-            placeholder="Enter your email"
-            required
-        >
 
-        <label>Password</label>
-        <input
-            type="password"
-            id="registerPassword"
-            placeholder="Create a password"
-            required
-        >
+        <!-- LEFT SIDE -->
 
-        <label>Confirm Password</label>
-        <input
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm your password"
-            required
-        >
+        <div class="auth-intro">
 
-        <button type="submit" class="btn full-btn">
-            Register
-        </button>
+            <span class="hero-badge">
+                ✦ Join the community
+            </span>
 
-        <p id="registerMessage" class="message"></p>
+            <h1>
+                Your ideas
+                <span>belong here.</span>
+            </h1>
 
-        <p>
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
+            <p>
+                Create your free Inkly account and
+                turn your thoughts, experiences, and
+                knowledge into stories worth sharing.
+            </p>
 
-    </form>
 
-</div>
+            <!-- FEATURES -->
+
+            <div class="auth-feature">
+
+                <div class="auth-feature-icon">
+                    ✍️
+                </div>
+
+                <div>
+
+                    <strong>
+                        Write freely
+                    </strong>
+
+                    <span>
+                        Create stories and share
+                        your unique perspective.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="auth-feature">
+
+                <div class="auth-feature-icon">
+                    🌎
+                </div>
+
+                <div>
+
+                    <strong>
+                        Reach readers
+                    </strong>
+
+                    <span>
+                        Connect with people who
+                        enjoy your ideas.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="auth-feature">
+
+                <div class="auth-feature-icon">
+                    💡
+                </div>
+
+                <div>
+
+                    <strong>
+                        Inspire others
+                    </strong>
+
+                    <span>
+                        Your experience might be
+                        exactly what someone needs.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTER CARD -->
+
+        <div class="auth-card">
+
+            <div class="auth-card-header">
+
+                <span class="auth-icon">
+                    ✨
+                </span>
+
+                <h2>
+                    Create your account
+                </h2>
+
+                <p>
+                    Start your Inkly journey today.
+                </p>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="message"
+                 class="alert">
+            </div>
+
+
+            <!-- REGISTER FORM -->
+
+            <form id="registerForm">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Full name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="form-control"
+                        placeholder="Your name"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required
+                    >
+
+                    <small class="form-hint">
+                        Use at least 6 characters.
+                    </small>
+
+                </div>
+
+
+                <!-- TERMS -->
+
+                <div class="terms">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        required
+                    >
+
+                    <label for="terms">
+
+                        I agree to the Inkly
+                        <a href="#">
+                            Terms of Service
+                        </a>
+                        and
+                        <a href="#">
+                            Privacy Policy
+                        </a>.
+
+                    </label>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-submit">
+
+                    Create Account
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <!-- LOGIN LINK -->
+
+            <div class="auth-footer">
+
+                <span>
+                    Already have an account?
+                </span>
+
+                <a href="login.html">
+                    Sign in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <a href="index.html"
+               class="logo">
+                Ink<span>ly</span>
+            </a>
+
+            <p>
+                A home for thoughtful stories.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
 
 <script src="js/script.js"></script>
+
 </body>
+
 </html>

@@ -1,62 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogApp - Login</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Inkly</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
-        <div class="logo">BlogApp</div>
+<!-- ================= NAVBAR ================= -->
 
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="register.html">Register</a>
-        </div>
-    </nav>
+<header class="navbar">
+
+    <div class="nav-container">
+
+        <a href="index.html"
+           class="logo">
+            Ink<span>ly</span>
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="register.html"
+               class="nav-btn">
+                Create Account
+            </a>
+
+        </nav>
+
+    </div>
+
 </header>
 
-<div class="form-container">
 
-    <form id="loginForm" class="form-box">
+<!-- ================= LOGIN PAGE ================= -->
 
-        <h2>Welcome Back</h2>
-        <p>Login to your account</p>
+<main class="auth-page">
 
-        <label>Email</label>
-        <input
-            type="email"
-            id="loginEmail"
-            placeholder="Enter your email"
-            required
-        >
+    <div class="auth-container">
 
-        <label>Password</label>
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="Enter your password"
-            required
-        >
 
-        <button type="submit" class="btn full-btn">
-            Login
-        </button>
+        <!-- LEFT SIDE -->
 
-        <p id="loginMessage" class="message"></p>
+        <div class="auth-intro">
 
-        <p>
-            Don't have an account?
-            <a href="register.html">Register</a>
-        </p>
+            <span class="hero-badge">
+                ✦ Welcome back
+            </span>
 
-    </form>
+            <h1>
+                Continue your
+                <span>story.</span>
+            </h1>
 
-</div>
+            <p>
+                Sign in to access your dashboard,
+                manage your stories, and discover
+                new ideas from the Inkly community.
+            </p>
+
+
+            <div class="auth-feature">
+
+                <div class="auth-feature-icon">
+                    ✍️
+                </div>
+
+                <div>
+
+                    <strong>
+                        Keep creating
+                    </strong>
+
+                    <span>
+                        Write and share your ideas
+                        with the world.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="auth-feature">
+
+                <div class="auth-feature-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <strong>
+                        Keep exploring
+                    </strong>
+
+                    <span>
+                        Discover stories from
+                        other writers.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOGIN CARD -->
+
+        <div class="auth-card">
+
+            <div class="auth-card-header">
+
+                <span class="auth-icon">
+                    👋
+                </span>
+
+                <h2>
+                    Welcome back
+                </h2>
+
+                <p>
+                    Sign in to your Inkly account.
+                </p>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="message"
+                 class="alert">
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="you@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-submit">
+
+                    Sign In
+                    <span>→</span>
+
+                </button>
+
+            </form>
+
+
+            <!-- REGISTER LINK -->
+
+            <div class="auth-footer">
+
+                <span>
+                    Don't have an account?
+                </span>
+
+                <a href="register.html">
+                    Create one
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <a href="index.html"
+               class="logo">
+                Ink<span>ly</span>
+            </a>
+
+            <p>
+                A home for thoughtful stories.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
 
 <script src="js/script.js"></script>
+
 </body>
+
 </html>

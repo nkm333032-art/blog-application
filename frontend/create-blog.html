@@ -1,76 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlogApp - Create Blog</title>
-    <link rel="stylesheet" href="css/style.css">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Write a Story - Inkly</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
 </head>
+
 <body>
 
-<header>
-    <nav class="navbar">
+<!-- ================= NAVBAR ================= -->
 
-        <div class="logo">BlogApp</div>
+<header class="navbar">
 
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="create-blog.html">Create Blog</a>
-            <button onclick="logout()" class="logout-btn">
-                Logout
-            </button>
-        </div>
+    <div class="nav-container">
 
-    </nav>
+        <a href="index.html"
+           class="logo">
+            Ink<span>ly</span>
+        </a>
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+        </nav>
+
+    </div>
+
 </header>
 
-<div class="form-container">
 
-    <form id="blogForm" class="form-box blog-form">
+<!-- ================= CREATE BLOG ================= -->
 
-        <h2>Create New Blog</h2>
-        <p>Share your thoughts with the world.</p>
+<main>
 
-        <label>Blog Title</label>
+    <div class="editor-wrapper">
 
-        <input
-            type="text"
-            id="blogTitle"
-            placeholder="Enter blog title"
-            required
-        >
+        <!-- HEADER -->
 
-        <label>Category</label>
+        <div class="editor-header">
 
-        <select id="blogCategory" required>
-            <option value="">Select Category</option>
-            <option value="Technology">Technology</option>
-            <option value="Education">Education</option>
-            <option value="Travel">Travel</option>
-            <option value="Lifestyle">Lifestyle</option>
-            <option value="Programming">Programming</option>
-        </select>
+            <span class="hero-badge">
+                ✦ CREATE & SHARE
+            </span>
 
-        <label>Blog Content</label>
+            <h1>
+                Write your
+                <span>story.</span>
+            </h1>
 
-        <textarea
-            id="blogContent"
-            rows="10"
-            placeholder="Write your blog here..."
-            required
-        ></textarea>
+            <p>
+                Turn your ideas, experiences, and knowledge
+                into something worth reading.
+            </p>
 
-        <button type="submit" class="btn full-btn">
-            Publish Blog
-        </button>
+        </div>
 
-        <p id="blogMessage" class="message"></p>
 
-    </form>
+        <!-- EDITOR CARD -->
 
-</div>
+        <div class="editor-card">
+
+
+            <!-- EDITOR TOP -->
+
+            <div class="editor-top">
+
+                <div>
+
+                    <span class="editor-label">
+                        NEW STORY
+                    </span>
+
+                    <h2>
+                        Tell us something interesting.
+                    </h2>
+
+                </div>
+
+                <div class="editor-symbol">
+                    ✍️
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div id="message"
+                 class="alert">
+            </div>
+
+
+            <!-- BLOG FORM -->
+
+            <form id="blogForm">
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="title">
+                        Story title
+                    </label>
+
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        class="form-control"
+                        placeholder="Give your story a great title..."
+                        maxlength="150"
+                        required
+                    >
+
+                    <small class="form-hint">
+                        Make it clear, interesting, and memorable.
+                    </small>
+
+                </div>
+
+
+                <!-- CATEGORY + AUTHOR -->
+
+                <div class="editor-row">
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="form-group">
+
+                        <label for="category">
+                            Category
+                        </label>
+
+                        <select
+                            id="category"
+                            name="category"
+                            class="form-control"
+                            required
+                        >
+
+                            <option value="">
+                                Select a category
+                            </option>
+
+                            <option value="Technology">
+                                💻 Technology
+                            </option>
+
+                            <option value="Programming">
+                                👨‍💻 Programming
+                            </option>
+
+                            <option value="Education">
+                                📚 Education
+                            </option>
+
+                            <option value="Lifestyle">
+                                🌱 Lifestyle
+                            </option>
+
+                            <option value="Business">
+                                💼 Business
+                            </option>
+
+                            <option value="Travel">
+                                ✈️ Travel
+                            </option>
+
+                            <option value="Other">
+                                💡 Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- AUTHOR -->
+
+                    <div class="form-group">
+
+                        <label for="author">
+                            Author
+                        </label>
+
+                        <input
+                            type="text"
+                            id="author"
+                            name="author"
+                            class="form-control"
+                            placeholder="Your name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTENT -->
+
+                <div class="form-group">
+
+                    <div class="content-label">
+
+                        <label for="content">
+                            Your story
+                        </label>
+
+                        <span>
+                            Write freely
+                        </span>
+
+                    </div>
+
+                    <textarea
+                        id="content"
+                        name="content"
+                        class="form-control story-editor"
+                        placeholder="Start writing your story here...
+
+Share your ideas, experiences, lessons, discoveries, or anything else you think is worth sharing."
+                        required
+                    ></textarea>
+
+                    <small class="form-hint">
+                        Take your time. Great stories don't have to be rushed.
+                    </small>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="editor-actions">
+
+                    <a
+                        href="dashboard.html"
+                        class="btn btn-outline">
+                        ← Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Publish Story
+                        <span>→</span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- WRITING TIP -->
+
+        <div class="writing-tip">
+
+            <div class="tip-icon">
+                💡
+            </div>
+
+            <div>
+
+                <strong>
+                    Writing tip
+                </strong>
+
+                <p>
+                    A good story gives readers something
+                    useful, interesting, or memorable to take away.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div>
+
+            <a href="index.html"
+               class="logo">
+                Ink<span>ly</span>
+            </a>
+
+            <p>
+                Make something worth reading.
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- JAVASCRIPT -->
 
 <script src="js/script.js"></script>
+
 </body>
+
 </html>
