@@ -1,59 +1,36 @@
 const express = require("express");
 const cors = require("cors");
-const fs = require("fs");
-const path = require("path");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const User = require("./models/User");
+const Blog = require("./models/Blog");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Data files
-const dataFolder = path.join(__dirname, "data");
-const usersFile = path.join(dataFolder, "users.json");
-const blogsFile = path.join(dataFolder, "blogs.json");
 
-// Make sure data folder exists
-if (!fs.existsSync(dataFolder)) {
-    fs.mkdirSync(dataFolder);
-}
+// ========================================
+// MONGODB CONNECTION
+// ========================================
 
-// Make sure JSON files exist
-if (!fs.existsSync(usersFile)) {
-    fs.writeFileSync(usersFile, "[]");
-}
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("MongoDB connected successfully");
 
-if (!fs.existsSync(blogsFile)) {
-    fs.writeFileSync(blogsFile, "[]");
-}
-
-// Read users
-function getUsers() {
-    return JSON.parse(fs.readFileSync(usersFile, "utf8"));
-}
-
-// Save users
-function saveUsers(users) {
-    fs.writeFileSync(
-        usersFile,
-        JSON.stringify(users, null, 2)
-    );
-}
-
-// Read blogs
-function getBlogs() {
-    return JSON.parse(fs.readFileSync(blogsFile, "utf8"));
-}
-
-// Save blogs
-function saveBlogs(blogs) {
-    fs.writeFileSync(
-        blogsFile,
-        JSON.stringify(blogs, null, 2)
-    );
-}
+        app.listen(PORT, () => {
+            console.log(`Server running at http://localhost:${PORT}`);
+        });
+    })
+    .catch((error) => {
+        console.error("MongoDB connection failed:");
+        console.error(error.message);
+    });
 
 
 // ========================================
@@ -72,49 +49,55 @@ app.get("/", (req, res) => {
 // REGISTER API
 // ========================================
 
-app.post("/api/register", (req, res) => {
+app.post("/api/register", async (req, res) => {
 
-    const { name, email, password } = req.body;
+    try {
 
-    if (!name || !email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: "All fields are required."
-        });
-    }
+        const { name, email, password } = req.body;
 
-    const users = getUsers();
-
-    const existingUser = users.find(
-        user => user.email.toLowerCase() === email.toLowerCase()
-    );
-
-    if (existingUser) {
-        return res.status(409).json({
-            success: false,
-            message: "Email already registered."
-        });
-    }
-
-    const newUser = {
-        id: Date.now(),
-        name: name,
-        email: email.toLowerCase(),
-        password: password
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    res.status(201).json({
-        success: true,
-        message: "Registration successful.",
-        user: {
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required."
+            });
         }
-    });
+
+        const existingUser = await User.findOne({
+            email: email.toLowerCase()
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: "Email already registered."
+            });
+        }
+
+        const newUser = await User.create({
+            name,
+            email: email.toLowerCase(),
+            password
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Registration successful.",
+            user: {
+                id: newUser._id,
+                name: newUser.name,
+                email: newUser.email
+            }
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
 });
 
 
@@ -122,41 +105,50 @@ app.post("/api/register", (req, res) => {
 // LOGIN API
 // ========================================
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", async (req, res) => {
 
-    const { email, password } = req.body;
+    try {
 
-    if (!email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: "Email and password are required."
-        });
-    }
+        const { email, password } = req.body;
 
-    const users = getUsers();
-
-    const user = users.find(
-        user =>
-            user.email.toLowerCase() === email.toLowerCase() &&
-            user.password === password
-    );
-
-    if (!user) {
-        return res.status(401).json({
-            success: false,
-            message: "Invalid email or password."
-        });
-    }
-
-    res.json({
-        success: true,
-        message: "Login successful.",
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and password are required."
+            });
         }
-    });
+
+        const user = await User.findOne({
+            email: email.toLowerCase(),
+            password: password
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password."
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Login successful.",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
 });
 
 
@@ -164,131 +156,190 @@ app.post("/api/login", (req, res) => {
 // CREATE BLOG API
 // ========================================
 
-app.post("/api/blogs", (req, res) => {
+app.post("/api/blogs", async (req, res) => {
 
-    const {
-        title,
-        category,
-        content,
-        author,
-        email
-    } = req.body;
+    try {
 
-    if (!title || !category || !content || !author || !email) {
-        return res.status(400).json({
+        const {
+            title,
+            category,
+            content,
+            author,
+            email
+        } = req.body;
+
+        if (!title || !category || !content || !author || !email) {
+            return res.status(400).json({
+                success: false,
+                message: "All blog fields are required."
+            });
+        }
+
+        const newBlog = await Blog.create({
+            title,
+            category,
+            content,
+            author,
+            email: email.toLowerCase()
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Blog created successfully.",
+            blog: newBlog
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
             success: false,
-            message: "All blog fields are required."
+            message: "Server error."
         });
     }
-
-    const blogs = getBlogs();
-
-    const newBlog = {
-        id: Date.now(),
-        title: title,
-        category: category,
-        content: content,
-        author: author,
-        email: email.toLowerCase(),
-        date: new Date().toLocaleDateString()
-    };
-
-    blogs.push(newBlog);
-    saveBlogs(blogs);
-
-    res.status(201).json({
-        success: true,
-        message: "Blog created successfully.",
-        blog: newBlog
-    });
 });
 
 
 // ========================================
-// GET ALL BLOGS API
+// GET ALL BLOGS
 // ========================================
 
-app.get("/api/blogs", (req, res) => {
+app.get("/api/blogs", async (req, res) => {
 
-    const blogs = getBlogs();
+    try {
 
-    res.json({
-        success: true,
-        blogs: blogs
-    });
-});
+        const blogs = await Blog.find().sort({
+            createdAt: -1
+        });
 
+        res.json({
+            success: true,
+            blogs
+        });
 
-// ========================================
-// GET USER BLOGS API
-// ========================================
+    } catch (error) {
 
-app.get("/api/blogs/user/:email", (req, res) => {
+        console.error(error);
 
-    const email = req.params.email.toLowerCase();
-
-    const blogs = getBlogs();
-
-    const userBlogs = blogs.filter(
-        blog => blog.email.toLowerCase() === email
-    );
-
-    res.json({
-        success: true,
-        blogs: userBlogs
-    });
-});
-
-
-// ========================================
-// DELETE BLOG API
-// ========================================
-
-app.delete("/api/blogs/:id", (req, res) => {
-
-    const blogId = Number(req.params.id);
-    const { email } = req.body;
-
-    let blogs = getBlogs();
-
-    const blog = blogs.find(
-        blog => blog.id === blogId
-    );
-
-    if (!blog) {
-        return res.status(404).json({
+        res.status(500).json({
             success: false,
-            message: "Blog not found."
+            message: "Server error."
         });
     }
-
-    if (
-        !email ||
-        blog.email.toLowerCase() !== email.toLowerCase()
-    ) {
-        return res.status(403).json({
-            success: false,
-            message: "You cannot delete this blog."
-        });
-    }
-
-    blogs = blogs.filter(
-        blog => blog.id !== blogId
-    );
-
-    saveBlogs(blogs);
-
-    res.json({
-        success: true,
-        message: "Blog deleted successfully."
-    });
 });
 
 
 // ========================================
-// START SERVER
+// GET USER BLOGS
 // ========================================
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+app.get("/api/blogs/user/:email", async (req, res) => {
+
+    try {
+
+        const email = req.params.email.toLowerCase();
+
+        const blogs = await Blog.find({
+            email
+        }).sort({
+            createdAt: -1
+        });
+
+        res.json({
+            success: true,
+            blogs
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
+});
+
+
+// ========================================
+// GET SINGLE BLOG
+// ========================================
+
+app.get("/api/blogs/:id", async (req, res) => {
+
+    try {
+
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found."
+            });
+        }
+
+        res.json({
+            success: true,
+            blog
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Invalid blog ID."
+        });
+    }
+});
+
+
+// ========================================
+// DELETE BLOG
+// ========================================
+
+app.delete("/api/blogs/:id", async (req, res) => {
+
+    try {
+
+        const { email } = req.body;
+
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found."
+            });
+        }
+
+        if (
+            !email ||
+            blog.email.toLowerCase() !== email.toLowerCase()
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: "You cannot delete this blog."
+            });
+        }
+
+        await Blog.findByIdAndDelete(req.params.id);
+
+        res.json({
+            success: true,
+            message: "Blog deleted successfully."
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
 });

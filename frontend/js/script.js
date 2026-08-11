@@ -1,14 +1,8 @@
-// =====================================================
-// INKLY BLOG APPLICATION
-// FRONTEND JAVASCRIPT
-// =====================================================
-
 const API_URL = "http://localhost:3000/api";
 
-
-// =====================================================
+// ========================================
 // MOBILE MENU
-// =====================================================
+// ========================================
 
 function toggleMenu() {
     const navLinks = document.getElementById("navLinks");
@@ -18,39 +12,30 @@ function toggleMenu() {
     }
 }
 
-
-// =====================================================
-// SHOW MESSAGE
-// =====================================================
+// ========================================
+// MESSAGE
+// ========================================
 
 function showMessage(message, type = "success") {
-
     const messageBox = document.getElementById("message");
 
-    if (!messageBox) {
-        alert(message);
-        return;
-    }
+    if (!messageBox) return;
 
     messageBox.textContent = message;
-    messageBox.className = "alert " + type;
-    messageBox.style.display = "block";
+    messageBox.className = `alert ${type}`;
 
-    setTimeout(() => {
-        messageBox.style.display = "none";
-    }, 4000);
+    messageBox.style.display = "block";
 }
 
-
-// =====================================================
+// ========================================
 // REGISTER
-// =====================================================
+// ========================================
 
 const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
 
-    registerForm.addEventListener("submit", async function (e) {
+    registerForm.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
@@ -58,174 +43,146 @@ if (registerForm) {
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
 
-        if (!name || !email || !password) {
-            showMessage("Please fill in all fields.", "error");
-            return;
-        }
-
         try {
 
             const response = await fetch(`${API_URL}/register`, {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
+                    name,
+                    email,
+                    password
                 })
             });
 
             const data = await response.json();
 
-            if (data.success) {
-
-                showMessage(
-                    "Account created successfully!",
-                    "success"
-                );
-
-                setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 1200);
-
-            } else {
-
-                showMessage(
-                    data.message || "Registration failed.",
-                    "error"
-                );
+            if (!response.ok) {
+                showMessage(data.message, "error");
+                return;
             }
+
+            showMessage(
+                "Account created successfully! Redirecting...",
+                "success"
+            );
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1200);
 
         } catch (error) {
 
-            console.error("Register error:", error);
+            console.error(error);
 
             showMessage(
-                "Cannot connect to backend. Make sure server.js is running.",
+                "Cannot connect to the backend.",
                 "error"
             );
         }
-
     });
 }
 
-
-// =====================================================
+// ========================================
 // LOGIN
-// =====================================================
+// ========================================
 
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
 
-    loginForm.addEventListener("submit", async function (e) {
+    loginForm.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
 
-        if (!email || !password) {
-
-            showMessage(
-                "Please enter email and password.",
-                "error"
-            );
-
-            return;
-        }
-
         try {
 
             const response = await fetch(`${API_URL}/login`, {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
-                    email: email,
-                    password: password
+                    email,
+                    password
                 })
             });
 
             const data = await response.json();
 
-            if (data.success) {
-
-                // Save user information
-                localStorage.setItem(
-                    "loggedInUser",
-                    JSON.stringify(data.user)
-                );
-
-                showMessage(
-                    "Login successful!",
-                    "success"
-                );
-
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1000);
-
-            } else {
-
-                showMessage(
-                    data.message || "Invalid email or password.",
-                    "error"
-                );
+            if (!response.ok) {
+                showMessage(data.message, "error");
+                return;
             }
+
+            localStorage.setItem(
+                "currentUser",
+                JSON.stringify(data.user)
+            );
+
+            showMessage(
+                "Login successful! Redirecting...",
+                "success"
+            );
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1000);
 
         } catch (error) {
 
-            console.error("Login error:", error);
+            console.error(error);
 
             showMessage(
-                "Cannot connect to backend. Make sure server.js is running.",
+                "Cannot connect to the backend.",
                 "error"
             );
         }
-
     });
 }
 
-
-// =====================================================
+// ========================================
 // CREATE BLOG
-// =====================================================
+// ========================================
 
 const blogForm = document.getElementById("blogForm");
 
 if (blogForm) {
 
-    const loggedInUser =
-        JSON.parse(localStorage.getItem("loggedInUser"));
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
 
-    // If user is not logged in
-    if (!loggedInUser) {
+    if (currentUser) {
 
-        window.location.href = "login.html";
-
-    } else {
-
-        // Automatically fill author
         const authorInput =
             document.getElementById("author");
 
         if (authorInput) {
-            authorInput.value = loggedInUser.name;
+            authorInput.value = currentUser.name;
         }
     }
 
-
-    blogForm.addEventListener("submit", async function (e) {
+    blogForm.addEventListener("submit", async (e) => {
 
         e.preventDefault();
+
+        const currentUser =
+            JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+
+            showMessage(
+                "Please login before publishing.",
+                "error"
+            );
+
+            return;
+        }
 
         const title =
             document.getElementById("title").value.trim();
@@ -233,39 +190,8 @@ if (blogForm) {
         const category =
             document.getElementById("category").value;
 
-        const author =
-            document.getElementById("author").value.trim();
-
         const content =
             document.getElementById("content").value.trim();
-
-
-        // Get logged in user again
-        const user =
-            JSON.parse(localStorage.getItem("loggedInUser"));
-
-
-        if (!user) {
-
-            showMessage(
-                "Please login before creating a blog.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!title || !category || !author || !content) {
-
-            showMessage(
-                "Please fill in all fields.",
-                "error"
-            );
-
-            return;
-        }
-
 
         try {
 
@@ -278,170 +204,138 @@ if (blogForm) {
                 },
 
                 body: JSON.stringify({
-
-                    title: title,
-
-                    category: category,
-
-                    content: content,
-
-                    author: author,
-
-                    // IMPORTANT:
-                    // Backend requires email
-                    email: user.email
-
+                    title,
+                    category,
+                    content,
+                    author: currentUser.name,
+                    email: currentUser.email
                 })
             });
 
-
             const data = await response.json();
 
-
-            if (data.success) {
-
-                showMessage(
-                    "Your story has been published!",
-                    "success"
-                );
-
-                blogForm.reset();
-
-
-                // Restore author after reset
-                const authorInput =
-                    document.getElementById("author");
-
-                if (authorInput) {
-                    authorInput.value = user.name;
-                }
-
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "dashboard.html";
-
-                }, 1200);
-
-            } else {
+            if (!response.ok) {
 
                 showMessage(
-                    data.message || "Failed to publish story.",
+                    data.message,
                     "error"
                 );
+
+                return;
             }
+
+            showMessage(
+                "Story published successfully!",
+                "success"
+            );
+
+            blogForm.reset();
+
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1200);
 
         } catch (error) {
 
-            console.error("Create blog error:", error);
+            console.error(error);
 
             showMessage(
-                "Cannot connect to backend. Make sure server.js is running.",
+                "Cannot connect to the backend.",
                 "error"
             );
         }
-
     });
 }
 
-
-// =====================================================
+// ========================================
 // LOAD ALL BLOGS
-// HOME PAGE
-// =====================================================
+// ========================================
 
 async function loadBlogs() {
 
-    const blogContainer =
+    const container =
         document.getElementById("blogContainer");
 
-    if (!blogContainer) {
-        return;
-    }
-
+    if (!container) return;
 
     try {
 
         const response =
             await fetch(`${API_URL}/blogs`);
 
-
         const data =
             await response.json();
 
-
         if (!data.success) {
+            throw new Error(data.message);
+        }
 
-            blogContainer.innerHTML = `
+        if (data.blogs.length === 0) {
+
+            container.innerHTML = `
                 <div class="empty-state">
-
-                    <h3>
-                        Unable to load stories
-                    </h3>
-
-                    <p>
-                        Please try again later.
-                    </p>
-
+                    <h3>No stories yet</h3>
+                    <p>Be the first person to publish a story.</p>
                 </div>
             `;
 
             return;
         }
 
+        container.innerHTML =
+            data.blogs.map(blog => `
 
-        const blogs =
-            data.blogs || [];
+                <article class="blog-card">
 
+                    <div class="blog-card-content">
 
-        if (blogs.length === 0) {
+                        <span class="blog-category">
+                            ${escapeHTML(blog.category)}
+                        </span>
 
-            blogContainer.innerHTML = `
-                <div class="empty-state">
+                        <h3>
+                            ${escapeHTML(blog.title)}
+                        </h3>
 
-                    <h3>
-                        No stories yet
-                    </h3>
+                        <p>
+                            ${escapeHTML(
+                                blog.content.substring(0, 150)
+                            )}...
+                        </p>
 
-                    <p>
-                        Be the first person to publish a story.
-                    </p>
+                        <div class="blog-meta">
 
-                    <br>
+                            <span>
+                                By ${escapeHTML(blog.author)}
+                            </span>
 
-                    <a
-                        href="register.html"
-                        class="btn btn-primary">
+                            <a
+                                href="blog-details.html?id=${blog._id}"
+                                class="btn btn-outline">
+                                Read Story →
+                            </a>
 
-                        Start Writing
+                        </div>
 
-                    </a>
+                    </div>
 
-                </div>
-            `;
+                </article>
 
-            return;
-        }
-
-
-        blogContainer.innerHTML =
-            blogs.map(blog => createBlogCard(blog)).join("");
-
+            `).join("");
 
     } catch (error) {
 
-        console.error("Load blogs error:", error);
+        console.error(error);
 
-        blogContainer.innerHTML = `
+        container.innerHTML = `
             <div class="empty-state">
 
                 <h3>
-                    Cannot connect to server
+                    Unable to load stories
                 </h3>
 
                 <p>
-                    Please make sure the backend server is running.
+                    Please make sure the backend is running.
                 </p>
 
             </div>
@@ -449,161 +343,59 @@ async function loadBlogs() {
     }
 }
 
-
-// =====================================================
-// CREATE BLOG CARD
-// =====================================================
-
-function createBlogCard(blog) {
-
-    const title =
-        escapeHTML(blog.title || "Untitled Story");
-
-    const category =
-        escapeHTML(blog.category || "General");
-
-    const author =
-        escapeHTML(blog.author || "Anonymous");
-
-    const content =
-        escapeHTML(blog.content || "");
-
-    const date =
-        escapeHTML(
-            blog.date ||
-            new Date().toLocaleDateString()
-        );
-
-
-    const preview =
-        content.length > 150
-            ? content.substring(0, 150) + "..."
-            : content;
-
-
-    return `
-        <article class="blog-card">
-
-            <div class="blog-card-image">
-
-                <div class="blog-image-icon">
-                    ✍️
-                </div>
-
-            </div>
-
-
-            <div class="blog-card-content">
-
-                <span class="blog-category">
-                    ${category}
-                </span>
-
-
-                <h3>
-                    ${title}
-                </h3>
-
-
-                <p>
-                    ${preview}
-                </p>
-
-
-                <div class="blog-meta">
-
-                    <span>
-                        By ${author}
-                    </span>
-
-                    <span>
-                        ${date}
-                    </span>
-
-                </div>
-
-            </div>
-
-        </article>
-    `;
-}
-
-
-// =====================================================
-// DASHBOARD
-// =====================================================
+// ========================================
+// LOAD USER BLOGS
+// ========================================
 
 async function loadUserBlogs() {
 
-    const userBlogs =
+    const container =
         document.getElementById("userBlogs");
 
-    if (!userBlogs) {
-        return;
-    }
+    if (!container) return;
 
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
 
-    const loggedInUser =
-        JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!currentUser) {
 
-
-    if (!loggedInUser) {
-
-        window.location.href =
-            "login.html";
+        window.location.href = "login.html";
 
         return;
     }
 
+    const welcomeMessage =
+        document.getElementById("welcomeMessage");
+
+    if (welcomeMessage) {
+        welcomeMessage.textContent =
+            `Welcome back, ${currentUser.name}.`;
+    }
 
     try {
 
-        // Use email-based API from your server.js
-        const response = await fetch(
-            `${API_URL}/blogs/user/${encodeURIComponent(loggedInUser.email)}`
-        );
-
+        const response =
+            await fetch(
+                `${API_URL}/blogs/user/${encodeURIComponent(currentUser.email)}`
+            );
 
         const data =
             await response.json();
 
-
         if (!data.success) {
-
-            userBlogs.innerHTML = `
-                <div class="empty-state">
-
-                    <h3>
-                        Unable to load your stories
-                    </h3>
-
-                </div>
-            `;
-
-            return;
+            throw new Error(data.message);
         }
 
-
-        const blogs =
-            data.blogs || [];
-
-
-        // Update story count
         const blogCount =
             document.getElementById("blogCount");
 
-
         if (blogCount) {
-
-            blogCount.textContent =
-                blogs.length;
+            blogCount.textContent = data.blogs.length;
         }
 
+        if (data.blogs.length === 0) {
 
-        // No blogs
-        if (blogs.length === 0) {
-
-            userBlogs.innerHTML = `
+            container.innerHTML = `
                 <div class="empty-state">
 
                     <h3>
@@ -619,9 +411,7 @@ async function loadUserBlogs() {
                     <a
                         href="create-blog.html"
                         class="btn btn-primary">
-
                         Write Your First Story
-
                     </a>
 
                 </div>
@@ -630,282 +420,249 @@ async function loadUserBlogs() {
             return;
         }
 
+        container.innerHTML =
+            data.blogs.map(blog => `
 
-        // Display blogs
-        userBlogs.innerHTML =
-            blogs.map(blog => {
+                <article class="blog-card">
 
-                return `
-                    <article class="blog-card">
+                    <div class="blog-card-content">
 
-                        <div class="blog-card-image">
+                        <span class="blog-category">
+                            ${escapeHTML(blog.category)}
+                        </span>
 
-                            <div class="blog-image-icon">
-                                ✍️
-                            </div>
+                        <h3>
+                            ${escapeHTML(blog.title)}
+                        </h3>
 
-                        </div>
+                        <p>
+                            ${escapeHTML(
+                                blog.content.substring(0, 150)
+                            )}...
+                        </p>
 
+                        <div class="blog-meta">
 
-                        <div class="blog-card-content">
+                            <a
+                                href="blog-details.html?id=${blog._id}"
+                                class="btn btn-outline">
+                                Read
+                            </a>
 
-                            <span class="blog-category">
-                                ${escapeHTML(blog.category)}
-                            </span>
-
-
-                            <h3>
-                                ${escapeHTML(blog.title)}
-                            </h3>
-
-
-                            <p>
-                                ${escapeHTML(
-                                    blog.content.length > 150
-                                        ? blog.content.substring(0, 150) + "..."
-                                        : blog.content
-                                )}
-                            </p>
-
-
-                            <div class="blog-meta">
-
-                                <span>
-                                    ${escapeHTML(blog.date)}
-                                </span>
-
-                                <button
-                                    class="delete-btn"
-                                    onclick="deleteBlog(${blog.id})">
-
-                                    Delete
-
-                                </button>
-
-                            </div>
+                            <button
+                                class="btn btn-primary"
+                                onclick="deleteBlog('${blog._id}')">
+                                Delete
+                            </button>
 
                         </div>
 
-                    </article>
-                `;
+                    </div>
 
-            }).join("");
+                </article>
 
+            `).join("");
 
     } catch (error) {
 
-        console.error(
-            "Dashboard error:",
-            error
-        );
+        console.error(error);
 
-        userBlogs.innerHTML = `
+        container.innerHTML = `
             <div class="empty-state">
-
-                <h3>
-                    Cannot connect to server
-                </h3>
-
-                <p>
-                    Please make sure server.js is running.
-                </p>
-
+                <h3>Unable to load your stories</h3>
             </div>
         `;
     }
 }
 
+// ========================================
+// BLOG DETAILS
+// ========================================
 
-// =====================================================
-// DASHBOARD USER NAME
-// =====================================================
+async function loadBlogDetails() {
 
-function loadUserInformation() {
+    const container =
+        document.getElementById("blogDetails");
 
-    const user =
-        JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!container) return;
 
+    const params =
+        new URLSearchParams(window.location.search);
 
-    if (!user) {
-        return;
-    }
+    const blogId = params.get("id");
 
+    if (!blogId) {
 
-    const welcomeMessage =
-        document.getElementById("welcomeMessage");
-
-
-    if (welcomeMessage) {
-
-        welcomeMessage.textContent =
-            `Welcome back, ${user.name}.`;
-    }
-}
-
-
-// =====================================================
-// DELETE BLOG
-// =====================================================
-
-async function deleteBlog(blogId) {
-
-    const user =
-        JSON.parse(localStorage.getItem("loggedInUser"));
-
-
-    if (!user) {
-
-        window.location.href =
-            "login.html";
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>Blog not found</h3>
+            </div>
+        `;
 
         return;
     }
-
-
-    const confirmed =
-        confirm("Are you sure you want to delete this story?");
-
-
-    if (!confirmed) {
-        return;
-    }
-
 
     try {
 
         const response =
-            await fetch(
-                `${API_URL}/blogs/${blogId}`,
-                {
-                    method: "DELETE",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        email: user.email
-                    })
-                }
-            );
-
+            await fetch(`${API_URL}/blogs/${blogId}`);
 
         const data =
             await response.json();
 
-
-        if (data.success) {
-
-            alert("Story deleted successfully.");
-
-            loadUserBlogs();
-
-        } else {
-
-            alert(
-                data.message ||
-                "Could not delete story."
-            );
+        if (!response.ok) {
+            throw new Error(data.message);
         }
 
+        const blog = data.blog;
+
+        container.innerHTML = `
+
+            <article class="blog-details">
+
+                <span class="blog-category">
+                    ${escapeHTML(blog.category)}
+                </span>
+
+                <h1>
+                    ${escapeHTML(blog.title)}
+                </h1>
+
+                <div class="blog-author">
+
+                    <strong>
+                        ${escapeHTML(blog.author)}
+                    </strong>
+
+                    <span>
+                        ${new Date(blog.createdAt).toLocaleDateString()}
+                    </span>
+
+                </div>
+
+                <div class="blog-content">
+
+                    ${escapeHTML(blog.content)
+                        .replace(/\n/g, "<br><br>")}
+
+                </div>
+
+                <br>
+
+                <a
+                    href="index.html"
+                    class="btn btn-outline">
+                    ← Back to Stories
+                </a>
+
+            </article>
+
+        `;
 
     } catch (error) {
 
-        console.error(
-            "Delete error:",
-            error
-        );
+        console.error(error);
 
-        alert(
-            "Cannot connect to backend."
-        );
+        container.innerHTML = `
+            <div class="empty-state">
+                <h3>Unable to load this story</h3>
+                <p>${escapeHTML(error.message)}</p>
+            </div>
+        `;
     }
 }
 
+// ========================================
+// DELETE BLOG
+// ========================================
 
-// =====================================================
-// LOGOUT
-// =====================================================
+async function deleteBlog(blogId) {
 
-function logout() {
+    const currentUser =
+        JSON.parse(localStorage.getItem("currentUser"));
 
-    localStorage.removeItem(
-        "loggedInUser"
-    );
-
-    window.location.href =
-        "index.html";
-}
-
-
-// =====================================================
-// PROTECT DASHBOARD
-// =====================================================
-
-function protectDashboard() {
-
-    const dashboard =
-        document.getElementById("userBlogs");
-
-
-    if (!dashboard) {
+    if (!currentUser) {
+        window.location.href = "login.html";
         return;
     }
 
+    const confirmed =
+        confirm("Are you sure you want to delete this story?");
 
-    const user =
-        localStorage.getItem("loggedInUser");
+    if (!confirmed) return;
 
+    try {
 
-    if (!user) {
+        const response =
+            await fetch(`${API_URL}/blogs/${blogId}`, {
 
-        window.location.href =
-            "login.html";
-    }
-}
+                method: "DELETE",
 
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-// =====================================================
-// ESCAPE HTML
-// =====================================================
+                body: JSON.stringify({
+                    email: currentUser.email
+                })
+            });
 
-function escapeHTML(value) {
+        const data =
+            await response.json();
 
-    return String(value)
+        if (!response.ok) {
 
-        .replace(/&/g, "&amp;")
+            alert(data.message);
 
-        .replace(/</g, "&lt;")
+            return;
+        }
 
-        .replace(/>/g, "&gt;")
-
-        .replace(/"/g, "&quot;")
-
-        .replace(/'/g, "&#039;");
-}
-
-
-// =====================================================
-// PAGE START
-// =====================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        console.log(
-            "Inkly frontend loaded successfully."
-        );
-
-        // Home
-        loadBlogs();
-
-        // Dashboard
-        protectDashboard();
-
-        loadUserInformation();
+        alert("Story deleted successfully.");
 
         loadUserBlogs();
 
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Cannot connect to the backend.");
     }
-);
+}
+
+// ========================================
+// LOGOUT
+// ========================================
+
+function logout() {
+
+    localStorage.removeItem("currentUser");
+
+    window.location.href = "login.html";
+}
+
+// ========================================
+// SECURITY HELPER
+// ========================================
+
+function escapeHTML(value) {
+
+    const div = document.createElement("div");
+
+    div.textContent = value || "";
+
+    return div.innerHTML;
+}
+
+// ========================================
+// PAGE INITIALIZATION
+// ========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    loadBlogs();
+
+    loadUserBlogs();
+
+    loadBlogDetails();
+
+});
