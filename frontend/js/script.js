@@ -1,4 +1,4 @@
-const API_URL = "http://blog-application-qpu4.onrender.com/api";
+const API_URL = "https://blog-application-qpu4.onrender.com/api";
 
 // ========================================
 // MOBILE MENU
