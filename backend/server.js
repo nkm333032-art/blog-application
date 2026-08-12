@@ -1,18 +1,22 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const User = require("./models/User");
 const Blog = require("./models/Blog");
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// ========================================
+// MIDDLEWARE
+// ========================================
+
 app.use(cors());
 app.use(express.json());
-
 
 // ========================================
 // MONGODB CONNECTION
@@ -32,7 +36,6 @@ mongoose
         console.error(error.message);
     });
 
-
 // ========================================
 // HOME / TEST API
 // ========================================
@@ -40,10 +43,9 @@ mongoose
 app.get("/", (req, res) => {
     res.json({
         success: true,
-        message: "Blog Application Backend is running!"
+        message: "Inkly Blog Application Backend is running!"
     });
 });
-
 
 // ========================================
 // REGISTER API
@@ -100,9 +102,8 @@ app.post("/api/register", async (req, res) => {
     }
 });
 
-
 // ========================================
-// LOGIN API
+// LOGIN API + JWT
 // ========================================
 
 app.post("/api/login", async (req, res) => {
@@ -130,9 +131,23 @@ app.post("/api/login", async (req, res) => {
             });
         }
 
+        // Create JWT token
+        const token = jwt.sign(
+            {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "1d"
+            }
+        );
+
         res.json({
             success: true,
             message: "Login successful.",
+            token: token,
             user: {
                 id: user._id,
                 name: user.name,
@@ -151,27 +166,58 @@ app.post("/api/login", async (req, res) => {
     }
 });
 
+// ========================================
+// GET CURRENT USER
+// ========================================
+
+app.get("/api/profile", authMiddleware, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.user.id)
+            .select("-password");
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+        }
+
+        res.json({
+            success: true,
+            user
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
+});
 
 // ========================================
 // CREATE BLOG API
 // ========================================
 
-app.post("/api/blogs", async (req, res) => {
+app.post("/api/blogs", authMiddleware, async (req, res) => {
 
     try {
 
         const {
             title,
             category,
-            content,
-            author,
-            email
+            content
         } = req.body;
 
-        if (!title || !category || !content || !author || !email) {
+        if (!title || !category || !content) {
             return res.status(400).json({
                 success: false,
-                message: "All blog fields are required."
+                message: "Title, category and content are required."
             });
         }
 
@@ -179,8 +225,10 @@ app.post("/api/blogs", async (req, res) => {
             title,
             category,
             content,
-            author,
-            email: email.toLowerCase()
+
+            // Get author information from JWT
+            author: req.user.name,
+            email: req.user.email
         });
 
         res.status(201).json({
@@ -200,7 +248,6 @@ app.post("/api/blogs", async (req, res) => {
     }
 });
 
-
 // ========================================
 // GET ALL BLOGS
 // ========================================
@@ -209,7 +256,38 @@ app.get("/api/blogs", async (req, res) => {
 
     try {
 
-        const blogs = await Blog.find().sort({
+        const blogs = await Blog.find()
+            .sort({
+                createdAt: -1
+            });
+
+        res.json({
+            success: true,
+            blogs
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
+});
+
+// ========================================
+// GET LOGGED-IN USER'S BLOGS
+// ========================================
+
+app.get("/api/blogs/my", authMiddleware, async (req, res) => {
+
+    try {
+
+        const blogs = await Blog.find({
+            email: req.user.email
+        }).sort({
             createdAt: -1
         });
 
@@ -229,9 +307,8 @@ app.get("/api/blogs", async (req, res) => {
     }
 });
 
-
 // ========================================
-// GET USER BLOGS
+// GET BLOGS BY EMAIL
 // ========================================
 
 app.get("/api/blogs/user/:email", async (req, res) => {
@@ -262,7 +339,6 @@ app.get("/api/blogs/user/:email", async (req, res) => {
     }
 });
 
-
 // ========================================
 // GET SINGLE BLOG
 // ========================================
@@ -289,23 +365,26 @@ app.get("/api/blogs/:id", async (req, res) => {
 
         console.error(error);
 
-        res.status(500).json({
+        res.status(400).json({
             success: false,
             message: "Invalid blog ID."
         });
     }
 });
 
-
 // ========================================
-// DELETE BLOG
+// UPDATE BLOG
 // ========================================
 
-app.delete("/api/blogs/:id", async (req, res) => {
+app.put("/api/blogs/:id", authMiddleware, async (req, res) => {
 
     try {
 
-        const { email } = req.body;
+        const {
+            title,
+            category,
+            content
+        } = req.body;
 
         const blog = await Blog.findById(req.params.id);
 
@@ -316,9 +395,61 @@ app.delete("/api/blogs/:id", async (req, res) => {
             });
         }
 
+        // Only the owner can update the blog
         if (
-            !email ||
-            blog.email.toLowerCase() !== email.toLowerCase()
+            blog.email.toLowerCase() !==
+            req.user.email.toLowerCase()
+        ) {
+            return res.status(403).json({
+                success: false,
+                message: "You cannot update this blog."
+            });
+        }
+
+        blog.title = title || blog.title;
+        blog.category = category || blog.category;
+        blog.content = content || blog.content;
+
+        await blog.save();
+
+        res.json({
+            success: true,
+            message: "Blog updated successfully.",
+            blog
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error."
+        });
+    }
+});
+
+// ========================================
+// DELETE BLOG
+// ========================================
+
+app.delete("/api/blogs/:id", authMiddleware, async (req, res) => {
+
+    try {
+
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).json({
+                success: false,
+                message: "Blog not found."
+            });
+        }
+
+        // Only the owner can delete the blog
+        if (
+            blog.email.toLowerCase() !==
+            req.user.email.toLowerCase()
         ) {
             return res.status(403).json({
                 success: false,
